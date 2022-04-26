@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const AuthorController= require("../controllers/authorController");
-const BlogController= require("../controllers/blogController");
+const authorController= require("../controllers/authorController");
+const blogController= require("../controllers/blogController");
 
 ///////////////// [ ALL API's HERE ] /////////////////
-router.post('/authors',AuthorController.createAuthor)
-
+router.post('/authors',authorController.createAuthor)
+router.post('/blogs',blogController.createBlog)
 
 
 
