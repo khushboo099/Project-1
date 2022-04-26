@@ -14,11 +14,11 @@ const blogSchema = new mongoose.Schema({
             type:ObjectId,
             ref:Author
         },
-        tags:Array,
+        tags:String,
         category: {type:String,
         required:true
     },
-        subcategory:Array,
+        subcategory:String,
         isPublished: {type:Boolean,
         default:false
     },
@@ -26,6 +26,6 @@ const blogSchema = new mongoose.Schema({
         isDeleted: {type:Boolean,
         default:false
     },
-        deletedAt: String, // if deleted is true deletedAt will have a date 2021-09-17T04:25:07.803Z,
+        deletedAt:String , // if deleted is true deletedAt will have a date 2021-09-17T04:25:07.803Z,
 },{timestamps:true})
 module.exports = mongoose.model("Blog", blogSchema)
