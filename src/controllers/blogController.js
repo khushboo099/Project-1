@@ -21,4 +21,17 @@ const createBlog = async function (req, res) {
     res.status(500).send({ status: false, msg: err.message });
   }
 };
+
+const updateBlog = async function (req, res) {
+  try {
+    const blogId =req.params.blogId;
+    const data = await blogModel.findById(blogId);
+    
+  } catch (err) {
+    res.status(500).send({ status: false, msg: err.message });
+  }
+};
+
+
 module.exports.createBlog = createBlog;
+module.exports.updateBlog = updateBlog;
