@@ -25,9 +25,7 @@ const createAuthor = async function (req, res) {
         let authorCreation = await authorModel.create(body);
         res.status(201).send({ status: true, data: authorCreation });
       } else
-        res
-          .status(400)
-          .send({ status: false, msg: "provide correct enum value" });
+       return res.status(400).send({ status: false, msg: "provide correct enum value" });
     }
   } catch (err) {
     res.status(500).send({ status: false, Error: err.message });
