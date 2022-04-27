@@ -7,13 +7,23 @@ const { default: mongoose } = require("mongoose");
 ///////////////// [ CREATE BLOG HANDLER ] /////////////////
 const createBlog = async function (req, res) {
   try {
-
-    const id = req.body.authorId;
+    const blogData = req.body
+    const id = blogData.authorId;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).send({ status: false, msg: "Provide valid authorId" });
     }
+    const titleData = blogData.title;
+    if (!titleData)
+      return res.status(400).send({ status: false, msg: "provide title of blog" });
 
-    const blogData = req.body;
+    const categoryData = blogData.category;
+    if (!categoryData)
+      return res.status(400).send({ status: false, msg: "provide category of blog" });
+  
+    const bodyData = blogData.body;
+    if (!bodyData)
+      return res.status(400).send({ status: false, msg: "provide body of blog" });
+
     if (blogData.isPublished === false) {
       const blogCreation = await blogModel.create(blogData);
       return res.status(201).send({ status: true, data: blogCreation });
@@ -45,7 +55,7 @@ const getBlogs = async function (req, res) {
         return res.status(200).send({ status: true, data: getBlog });
 
       if (getBlog.length == 0)
-        return res.status(400).send({ status: false, msg: "No blog found" });
+        return res.status(404).send({ status: false, msg: "No blog found" });
     }
 
     queryDetails.isDeleted = false;
