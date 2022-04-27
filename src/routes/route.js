@@ -11,6 +11,12 @@ router.post('/blogs',blogController.createBlog)
 
 
 
+router.delete('/blogs/:blogId',blogController.deleteBlog)
+
+
+
+
+
 
 
 
