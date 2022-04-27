@@ -1,26 +1,32 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
+const { default: mongoose } = require("mongoose");
 
 ///////////////// [ ALL HANDLER LOGIC HERE ] /////////////////
 const createBlog = async function (req, res) {
   try {
     const id = req.body.authorId;
-    const checkId = await authorModel.findById(id);
-    if (!checkId)
-      return res.status(400).send({ status: false, msg: "provide valid author id" });
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).send({ status: false, msg: "provide valid authorId" });
+    }
+
     const blogData = req.body;
     if (blogData.isPublished === false) {
 
       const blogCreation = await blogModel.create(blogData);
-      return res.status(201).send({ status: true, data: blogCreation });
-    } else {
 
-      blogData.publishedAt = new Date();
+      return res.status(201).send({ status: true, data: blogCreation });
+    } 
+    else {
+      blogData.publishedAt = Date.now();
+
       const blogCreation = await blogModel.create(blogData);
 
       res.status(201).send({ status: true, data: blogCreation });
     }
-  } catch (err) {
+  } 
+  catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
 };
