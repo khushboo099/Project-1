@@ -24,9 +24,9 @@ const createBlog = async function (req, res) {
 
 const updateBlog = async function (req, res) {
   try {
-    const blogId =req.params.blogId;
+    const blogId = req.params.blogId;
     const data = await blogModel.findById(blogId);
-    
+
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
@@ -37,9 +37,9 @@ const deleteBlog = async function (req, res) {
     const blogId = req.params.blogId;
     const checkBlog = await blogModel.findById(blogId);
     if (!checkBlog)
-     return res.status(404).send({ status: false, msg: "no blog with this Id" });
+      return res.status(404).send({ status: false, msg: "no blog with this Id" });
     if (checkBlog.isDeleted === true)
-     return res.status(404).send({ status: false, msg: "no blog with this Id" });
+      return res.status(404).send({ status: false, msg: "no blog with this Id" });
     const delBlog = await blogModel.findOneAndUpdate(
       { _id: blogId },
       { isDeleted: true }
@@ -50,7 +50,28 @@ const deleteBlog = async function (req, res) {
   }
 };
 
+//Delete blog documents by category, authorid, tag name, subcategory name, unpublished
+const blogDeleted = async function (req, res) {
+  try {
+    const data = req.query
+    if (Object.keys(data).length===0) {
+      return res.status(400).send({ status: false, msg: "bad request"})
+    }
+    if (data) {
+      const deletedBlog = await blogModel.updateMany({ $or: [{authorId:data.authorId},{category:data.category},{tags:data.tags},{subcategory:data.subcategory},{isPublished:data.isPublished}] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
+      return res.status(201).send({ status: true, msg: "deletedBlog" })
+    }
+    else {
+      res.status(404).send({ status: false, msg: "no blogs exist" })
+    }
+
+  }
+  catch (err) {
+    res.status(500).send({ status: false, msg: err.message });
+  }
+}
 
 module.exports.createBlog = createBlog;
 module.exports.updateBlog = updateBlog;
 module.exports.deleteBlog = deleteBlog;
+module.exports.blogDeleted = blogDeleted;
