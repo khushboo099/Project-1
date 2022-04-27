@@ -9,8 +9,14 @@ const createBlog = async function (req, res) {
     if (!checkId)
       res.status(400).send({ status: false, msg: "provide valid author id" });
     const blogData = req.body;
-    const blogCreation = await blogModel.create(blogData);
-    res.status(201).send({ status: true, data: blogCreation });
+    if (blogData.isPublished === false) {
+      const blogCreation = await blogModel.create(blogData);
+      res.status(201).send({ status: true, data: blogCreation });
+    } else {
+      blogData.publishedAt = new Date();
+      const blogCreation = await blogModel.create(blogData);
+      res.status(201).send({ status: true, data: blogCreation });
+    }
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
