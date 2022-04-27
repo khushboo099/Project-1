@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { default: isEmail } = require("validator/lib/isEmail")
+
 
 ///////////////// [ AUTHOR SCHEMA HERE ] /////////////////
 const authorSchema = new mongoose.Schema({
@@ -18,9 +18,7 @@ const authorSchema = new mongoose.Schema({
     email:{
         type:String,
         unique:true,
-        required:true,
-        validate:[isEmail,'invalid email']
-        
+        required:true,        
     },
     password:{
         type:String,

@@ -31,17 +31,51 @@ const createBlog = async function (req, res) {
   }
 };
 
+
+const getBlogs = async function (req, res) {
+  try {
+    const queryDetails = req.query;
+    
+    if (Object.keys(queryDetails).lenght == 0) {
+      let getBlog = await blogModel.find({
+        isDeleted: false,
+        isPublished: true,
+      });
+      if (getBlog.length != 0)
+        return res.status(200).send({ status: true, data: getBlog });
+
+      if (getBlog.length == 0)
+        return res.status(400).send({ status: false, msg: "No blog found" });
+    }
+
+    queryDetails.isDeleted = false;
+    queryDetails.isPublished = true;
+    const authorId = queryDetails.authorId;
+
+    if (!mongoose.Types.ObjectId.isValid(authorId)) {
+      return res.status(400).send({ status: false, msg: "provide valid authorId" });
+    }
+
+    const specificBlogs = await blogModel.find(queryDetails);
+
+    if (specificBlogs.length != 0)
+      return res.status(200).send({ status: true, data: specificBlogs });
+
+    if (specificBlogs.length == 0)
+      return res.status(404).send({ status: false, msg: "No blog data  found" });
+  } 
+  catch (err) {
+    return res.status(500).send({ status: false, msg: err.message });
+  }
+};
+
 const updateBlog = async function (req, res) {
 
   try {
     const data = req.body;
     const blogId = req.params.blogId;
     const blog = await blogModel.findById(blogId);
-    const checkId = await authorModel.findById(data.authorId);
-
-    if (!checkId)
-      return res.status(400).send({ status: false, msg: "Provide valid Author id" });
-
+   
     if (blog) {
       if (blog.isDeleted === false) {
         if (blog.isPublished === false) {
@@ -71,38 +105,47 @@ const deleteBlog = async function (req, res) {
   try {
     const blogId = req.params.blogId;
     const checkBlog = await blogModel.findById(blogId);
+
     if (!checkBlog)
-      return res
-        .status(404)
-        .send({ status: false, msg: "no blog with this Id" });
+      return res.status(404).send({ status: false, msg: "no blog with this Id" });
+
     if (checkBlog.isDeleted === true)
-      return res
-        .status(404)
-        .send({ status: false, msg: "no blog with this Id" });
+      return res.status(404).send({ status: false, msg: "no blog with this Id" });
+
     const delBlog = await blogModel.findOneAndUpdate(
       { _id: blogId },
       { isDeleted: true }
     );
     res.status(200).send({ status: true, msg: "Your Blog is deleted" });
-  } catch (err) {
+  }
+   catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
 };
 
 
 
-const blogDeleted = async function (req, res) {
+const blogDeleteByQuery= async function (req, res) {
   try {
     const data = req.query
     if (Object.keys(data).length===0) {
-      return res.status(400).send({ status: false, msg: "bad request"})
+      return res.status(400).send({ status: false, msg: "please send required queries"})
     }
+    if(data.authorId){
+      if (!mongoose.Types.ObjectId.isValid(data.authorId)) {
+        return res.status(400).send({ status: false, msg: "provide valid authorId" });
+      }
+    }
+
     if (data) {
-      const deletedBlog = await blogModel.updateMany({ $or: [{authorId:data.authorId},{category:data.category},{tags:data.tags},{subcategory:data.subcategory},{isPublished:data.isPublished}] }, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
-      return res.status(201).send({ status: true, msg: "deletedBlog" })
+      const deletedBlog = await blogModel.updateMany({ $or: [{authorId:data.authorId},{category:data.category},{tags:data.tags},{subcategory:data.subcategory},{isPublished:data.isPublished}] },
+         { $set: { isDeleted: true, deletedAt: Date.now() } }
+         );
+
+      return res.status(201).send({ status: true, msg: "your blog is deleted" })
     }
     else {
-      res.status(404).send({ status: false, msg: "no blogs exist" })
+      res.status(404).send({ status: false, msg: "no such blogs exist" })
     }
 
   }
@@ -110,8 +153,8 @@ const blogDeleted = async function (req, res) {
     res.status(500).send({ status: false, msg: err.message });
   }
 }
-
 module.exports.createBlog = createBlog;
+module.exports.getBlogs = getBlogs;
 module.exports.updateBlog = updateBlog;
 module.exports.deleteBlog = deleteBlog;
-module.exports.blogDeleted = blogDeleted;
+module.exports.blogDeleteByQuery = blogDeleteByQuery;
