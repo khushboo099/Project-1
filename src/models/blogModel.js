@@ -39,4 +39,6 @@ const blogSchema = new mongoose.Schema({
 },
     { timestamps: true }
 )
+
+///////////////// [ EXPRORTED BLOG MODEL ] /////////////////
 module.exports = mongoose.model("Blog", blogSchema)

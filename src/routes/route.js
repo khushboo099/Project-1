@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+
+///////////////// [ IMPORTED CONTROLLERS ] /////////////////
 const authorController= require("../controllers/authorController");
 const blogController= require("../controllers/blogController");
 
@@ -11,9 +13,5 @@ router.put('/blogs/:blogId',blogController.updateBlog)
 router.delete('/blogs/:blogId',blogController.deleteBlog)
 router.delete('/blogs',blogController.blogDeleteByQuery)
 
-
-
-
-
-
+///////////////// [ EXPRORTED ROUTHER ] /////////////////
 module.exports = router;

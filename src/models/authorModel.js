@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 ///////////////// [ AUTHOR SCHEMA HERE ] /////////////////
 const authorSchema = new mongoose.Schema({
     fname:{
@@ -26,4 +25,5 @@ const authorSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
+///////////////// [ EXPRORTED AUTHOR MODEL ] /////////////////
 module.exports = mongoose.model("Author", authorSchema)
