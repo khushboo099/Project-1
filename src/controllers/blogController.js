@@ -38,7 +38,7 @@ const createBlog = async function (req, res) {
     else {
       blogData.publishedAt = Date.now();
       const blogCreation = await blogModel.create(blogData);
-      res.status(201).send({ status: true, data: blogCreation });
+      return res.status(201).send({ status: true, data: blogCreation });
     }
 
   }
@@ -50,7 +50,6 @@ const createBlog = async function (req, res) {
 
 
 ///////////////// [ GET BLOGS HANDLER ] /////////////////
-
 const getBlogs = async function (req, res) {
   try {
 
