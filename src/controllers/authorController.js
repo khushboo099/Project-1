@@ -31,7 +31,7 @@ const createAuthor = async function (req, res) {
 
     const checkEmail = await authorModel.findOne({ email: emailData });
     if (checkEmail)
-      res.status(400).send({ status: false, msg: "This email already exists" });
+      return res.status(400).send({ status: false, msg: "This email already exists" });
 
     const titleData = body.title;
     if (titleData) {
