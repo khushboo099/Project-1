@@ -6,7 +6,7 @@ const  mongoose = require("mongoose");
 const authenticAuthor = function (req, res, next) {
   try {
 
-    token = req.headers["x-api-key"];
+   const token = req.headers["x-api-key"];
     if (!token) {
       return res.status(404).send({ status: false, msg: "Token must be present" });
     }
@@ -34,11 +34,13 @@ const authorizedAuthor = async function (req, res, next) {
     jwt.verify(token, "Group35-Project1", function (error, data) { decodeddata = data });
 
     const blogId = req.params.blogId;
-    if (!mongoose.Types.ObjectId.isValid(blogId)) {
-      return res.status(400).send({ status: false, msg: "Provide valid blogId" });
-    }
+   
 
     if (blogId) {
+
+      if (!mongoose.Types.ObjectId.isValid(blogId)) {
+        return res.status(400).send({ status: false, msg: "Provide valid blogId" });
+      }
 
       const findBlog = await blogModel.findById(blogId);
       const findAuthorId = findBlog.authorId;
@@ -51,8 +53,8 @@ const authorizedAuthor = async function (req, res, next) {
         next();
       }
     }
-
-    const authorId = req.query.authorId;
+    else{
+      const authorId = req.query.authorId;
     if (!authorId)
       return res.status(400).send({ status: false, msg: "send author id" });
 
@@ -66,6 +68,9 @@ const authorizedAuthor = async function (req, res, next) {
     else {
       next();
     }
+
+    }
+
   } 
   catch (err) {
     res.status(500).send({ status: false, msg: err.message });
