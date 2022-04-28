@@ -1,6 +1,7 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-const { default: mongoose } = require("mongoose");
+const  mongoose = require("mongoose");
+
 ///////////////// [ ALL HANDLER LOGIC HERE ] /////////////////
 
 
@@ -96,13 +97,9 @@ const updateBlog = async function (req, res) {
   try {
 
     const data = req.body;
-
     const blogId = req.params.blogId;
-    if (!mongoose.Types.ObjectId.isValid(blogId)) {
-      return res.status(400).send({ status: false, msg: "Provide valid blogId" });
-    }
-
     const blog = await blogModel.findById(blogId);
+
     if (blog) {
       if (blog.isDeleted === false) {
         if (blog.isPublished === false) {
@@ -133,12 +130,8 @@ const deleteBlog = async function (req, res) {
   try {
 
     const blogId = req.params.blogId;
-
-    if (!mongoose.Types.ObjectId.isValid(blogId)) {
-      return res.status(400).send({ status: false, msg: "Provide valid blogId" });
-    }
-
     const checkBlog = await blogModel.findById(blogId);
+
     if (!checkBlog)
       return res.status(404).send({ status: false, msg: "No blog with this Id" });
 
@@ -160,16 +153,7 @@ const blogDeleteByQuery= async function (req, res) {
   try {
     
     const data = req.query
-    if (Object.keys(data).length===0) {
-      return res.status(400).send({ status: false, msg: "please send required queries"})
-    }
-
-    if(data.authorId){
-      if (!mongoose.Types.ObjectId.isValid(data.authorId)) {
-        return res.status(400).send({ status: false, msg: "provide valid authorId" });
-      }
-    } 
-
+   
     if (data) {
       const deletedBlog = await blogModel.updateMany({ $or: [{authorId:data.authorId},{category:data.category},{tags:data.tags},{subcategory:data.subcategory},{isPublished:data.isPublished}] },
          { $set: { isDeleted: true, deletedAt: Date.now()  }} ,{new:true}
@@ -178,7 +162,7 @@ const blogDeleteByQuery= async function (req, res) {
          if(deletedBlog.modifiedCount===0)
             return res.status(404).send({status:false,msg:"blogs not found"})
 
-      return res.status(201).send({ status: true, msg: deletedBlog })
+      return res.status(201).send({ status: true, msg: "Your blog is deleted" })
     }
    
   }
