@@ -38,7 +38,7 @@ const createAuthor = async function (req, res) {
       if (titleData == "Mr" || titleData == "Mrs" || titleData == "Miss") {
 
         const authorCreation = await authorModel.create(body);
-        res.status(201).send({ status: true, data: authorCreation });
+        return res.status(201).send({ status: true, data: authorCreation });
       }
       else
         return res.status(400).send({ status: false, msg: "Provide correct enum value" });
