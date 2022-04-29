@@ -51,6 +51,8 @@ const createAuthor = async function (req, res) {
   }
 };
 
+
+///////////////// [ CREATE AUTHOR LOGIN HANDLER ] /////////////////
 const loginAuthor = async function (req, res) {
   try{
     const email = req.body.email;

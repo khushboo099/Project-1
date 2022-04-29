@@ -47,7 +47,7 @@ const authorizedAuthor = async function (req, res, next) {
       const userLoggedIn = decodeddata.authorId;
 
       if (findAuthorId != userLoggedIn) {
-        return res.status(403).send({status: false,msg: "You are not authorised"});
+        return res.status(403).send({status: false,msg: "You are not authorised for this request"});
       } 
       else {
         next();
@@ -55,6 +55,7 @@ const authorizedAuthor = async function (req, res, next) {
     }
     else{
       const authorId = req.query.authorId;
+
     if (!authorId)
       return res.status(400).send({ status: false, msg: "send author id" });
 
@@ -63,7 +64,7 @@ const authorizedAuthor = async function (req, res, next) {
     }
 
     if (authorId != decodeddata.authorId) {
-      return res.send({ status: false,msg: "You are not authorised"});
+      return res.send({ status: false,msg: "You are not authorised for this request"});
     } 
     else {
       next();

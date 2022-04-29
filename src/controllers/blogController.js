@@ -103,7 +103,8 @@ const updateBlog = async function (req, res) {
     if (blog) {
       if (blog.isDeleted === false) {
         if (blog.isPublished === false) {
-          const updatedDate = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isPublished: true, publishedAt: Date.now() } });
+          const updatedDate = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isPublished: true, publishedAt: Date.now() } },{new:true});
+          return res.status(200).send({ status: true, data: updatedDate });
         }
 
         const updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { ...data }, { new: true });
@@ -138,7 +139,7 @@ const deleteBlog = async function (req, res) {
     if (checkBlog.isDeleted === true)
       return res.status(404).send({ status: false, msg: "No blog with this Id" });
 
-    const delBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true });
+    const delBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date.now() });
     res.status(200).send({ status: true, msg: "Your Blog is deleted" });
   }
 
@@ -162,7 +163,7 @@ const blogDeleteByQuery= async function (req, res) {
          if(deletedBlog.modifiedCount===0)
             return res.status(404).send({status:false,msg:"blogs not found"})
 
-      return res.status(201).send({ status: true, msg: "Your blog is deleted" })
+      return res.status(200).send({ status: true, msg: "Your blog is deleted" })
     }
    
   }
