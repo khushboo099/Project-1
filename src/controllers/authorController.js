@@ -82,7 +82,6 @@ const loginAuthor = async function (req, res) {
       },
       "Group35-Project1"
     );
-   // res.setHeader("x-api-key",token);
    return res.status(201).send({ status: true, data: token });
   }
   catch(err){

@@ -11,9 +11,6 @@ const createBlog = async function (req, res) {
     const blogData = req.body;
 
     const authorId = blogData.authorId;
-    if (!mongoose.Types.ObjectId.isValid(authorId)) {
-      return res.status(400).send({ status: false, msg: "Provide valid authorId" });
-    }
 
     const presentAuthor = await authorModel.findById({ _id: authorId })
     if (!presentAuthor)
@@ -133,9 +130,6 @@ const deleteBlog = async function (req, res) {
     const blogId = req.params.blogId;
     const checkBlog = await blogModel.findById(blogId);
 
-    if (!checkBlog)
-      return res.status(404).send({ status: false, msg: "No blog with this Id" });
-
     if (checkBlog.isDeleted === true)
       return res.status(404).send({ status: false, msg: "No blog with this Id" });
 
@@ -154,7 +148,6 @@ const blogDeleteByQuery= async function (req, res) {
   try {
     
     const data = req.query
-   
     if (data) {
       const deletedBlog = await blogModel.updateMany({ $or: [{authorId:data.authorId},{category:data.category},{tags:data.tags},{subcategory:data.subcategory},{isPublished:data.isPublished}] },
          { $set: { isDeleted: true, deletedAt: Date.now()  }} ,{new:true}

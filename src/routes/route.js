@@ -11,7 +11,7 @@ const middleware= require("../Middleware/auth");
 ///////////////// [ ALL API's HERE ] /////////////////
 router.post('/authors',authorController.createAuthor)
 
-router.post('/blogs',blogController.createBlog)
+router.post('/blogs',middleware.authenticAuthor,middleware.authorizedAuthor,blogController.createBlog)
 
 router.get('/blogs',middleware.authenticAuthor,blogController.getBlogs)
 
