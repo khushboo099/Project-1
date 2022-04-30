@@ -12,19 +12,19 @@ const createAuthor = async function (req, res) {
 
     const fnameData = body.fname;
     if (!fnameData)
-      return res.status(400).send({ status: false, msg: "provide first name" });
+      return res.status(400).send({ status: false, msg: "Provide first name" });
 
     const lnameData = body.lname;
     if (!lnameData)
-      return res.status(400).send({ status: false, msg: "provide last name" });
+      return res.status(400).send({ status: false, msg: "Provide last name" });
 
     const passwordData = body.password;
     if (!passwordData)
-      return res.status(400).send({ status: false, msg: "provide password" });
+      return res.status(400).send({ status: false, msg: "Provide password" });
 
     const emailData = body.email;
     if (!emailData)
-      return res.status(400).send({ status: false, msg: "give email" });
+      return res.status(400).send({ status: false, msg: "Provide email" });
 
     const validEmail = validator.isEmail(emailData);
     if (validEmail === false)
@@ -42,7 +42,12 @@ const createAuthor = async function (req, res) {
         return res.status(201).send({ status: true, data: authorCreation });
       }
       else
-        return res.status(400).send({ status: false, msg: "Provide correct enum value" });
+        return res.status(400).send({ status: false, msg: "Provide correct title" });
+    }
+
+    if (body){
+      const authorCreation = await authorModel.create(body);
+      return res.status(201).send({status:true, data: authorCreation})
     }
 
   }
@@ -59,11 +64,10 @@ const loginAuthor = async function (req, res) {
     const password = req.body.password;
 
     if (!password)
-      return res.status(400).send({ status: false, msg: "provide password" });
+      return res.status(400).send({ status: false, msg: "Provide password" });
 
-   
     if (!email)
-      return res.status(400).send({ status: false, msg: "give email" });
+      return res.status(400).send({ status: false, msg: "Provide email" });
 
     const validEmail = validator.isEmail(email);
     if (validEmail === false)
@@ -73,7 +77,6 @@ const loginAuthor = async function (req, res) {
     if (!author)
       return res.status(400).send({status: false, msg: "username or the password is not valid"  });
 
-
     const token = jwt.sign(
       {
         authorId: author._id.toString(),
@@ -82,6 +85,7 @@ const loginAuthor = async function (req, res) {
       },
       "Group35-Project1"
     );
+
    return res.status(201).send({ status: true, data: token });
   }
   catch(err){
