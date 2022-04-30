@@ -45,10 +45,9 @@ const createAuthor = async function (req, res) {
         return res.status(400).send({ status: false, msg: "Provide correct title" });
     }
 
-    if (body){
       const authorCreation = await authorModel.create(body);
       return res.status(201).send({status:true, data: authorCreation})
-    }
+    
 
   }
   catch (err) {
