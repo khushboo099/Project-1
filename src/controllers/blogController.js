@@ -72,6 +72,7 @@ const getBlogs = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Provide valid authorId" });
     }
   }
+    //// its used for check to validaion of authorId///////////
 
     const specificBlogs = await blogModel.find(queryDetails);
     if (specificBlogs.length != 0)
